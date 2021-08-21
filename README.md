@@ -4,4 +4,4 @@
 
 1. `npm install`
 
-2. `npm start`
+2. `npm start` -> runs on http://localhost:3000

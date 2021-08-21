@@ -1,19 +1,44 @@
 import { useState } from "react";
 import "./App.css";
 
-function App() {
-  const [inputValue, setInputValue] = useState("");
-  const [todos, setTodos] = useState([]);
+const TODO_KEY = "todos";
 
-  const handleAdd = (e) => {
-    setTodos([...todos, inputValue]);
-    setInputValue("");
+const getLocalStorage = () => {
+  const value = localStorage.getItem(TODO_KEY);
+  console.log(value);
+  return JSON.parse(value);
+};
+
+const updateLocalStorage = (todos) => {
+  return localStorage.setItem(TODO_KEY, JSON.stringify(todos));
+};
+
+function App() {
+  const previous_todos = getLocalStorage();
+  const [todos, setTodos] = useState(previous_todos ? previous_todos : []);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleAdd = () => {
+    // add only if input value is not empty
+    if (inputValue) {
+      // A new copy of current todos is created
+      const new_todos = [...todos, inputValue];
+      // update todos state
+      setTodos(new_todos);
+      // update localStorage with new todos
+      updateLocalStorage(new_todos);
+      // clears input field
+      setInputValue("");
+    }
   };
 
   const handleDelete = (index) => {
-    const new_todos = [...todos]; // A new copy of current todos must be created
+    // A new copy of current todos is created
+    const new_todos = [...todos];
+    // remove item at index
     new_todos.splice(index, 1);
     setTodos(new_todos);
+    updateLocalStorage(new_todos);
   };
 
   return (
